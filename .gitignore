@@ -1,0 +1,19 @@
+# Python environment (recreate with: python3 -m venv .venv && .venv/bin/pip install -r requirements.txt)
+.venv/
+__pycache__/
+*.pyc
+
+# Laser Prepare.app build output (rebuild with app/build.sh)
+app/build/
+app/dist/
+
+# macOS
+.DS_Store
+._*
+
+# per-user settings written by the app
+settings/remembered.json
+
+# app rebuild log and lock (githooks/post-commit)
+app/build.log
+app/.building/

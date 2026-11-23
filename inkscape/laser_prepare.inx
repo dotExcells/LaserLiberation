@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<inkscape-extension xmlns="http://www.inkscape.org/namespace/inkscape/extension">
+  <name>Prepare for laser</name>
+  <id>org.laseradapter.effect.prepare_for_laser</id>
+  <effect needs-live-preview="false">
+    <object-type>all</object-type>
+    <effects-menu>
+      <submenu name="Laser"/>
+    </effects-menu>
+  </effect>
+  <script>
+    <command location="inx" interpreter="python">laser_prepare.py</command>
+  </script>
+</inkscape-extension>

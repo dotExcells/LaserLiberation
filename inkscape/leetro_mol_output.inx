@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<inkscape-extension xmlns="http://www.inkscape.org/namespace/inkscape/extension">
+  <name>Leetro LaserCut Output</name>
+  <id>org.laseradapter.output.leetro_mol</id>
+  <dependency type="extension">org.inkscape.output.svg.inkscape</dependency>
+  <param name="tab" type="notebook">
+    <page name="settings" gui-text="Laser settings">
+      <label appearance="header">Engrave: filled shapes</label>
+      <label>These settings apply to every colour. For different settings per colour, use Extensions → Laser → Prepare for laser… instead.</label>
+      <param name="engrave_speed" type="float" min="1" max="1000" precision="0" gui-text="Speed (mm/s):">500</param>
+      <param name="engrave_power" type="float" min="0" max="100" precision="1" gui-text="Power (%):">30</param>
+      <param name="engrave_interval" type="float" min="0.02" max="2" precision="2" gui-text="Line spacing (mm):">0.10</param>
+      <param name="engrave_bidir" type="bool" gui-text="Burn in both directions">false</param>
+      <spacer/>
+      <label appearance="header">Cut: outlines (stroke)</label>
+      <param name="cut_speed" type="float" min="1" max="500" precision="1" gui-text="Speed (mm/s):">10</param>
+      <param name="cut_power" type="float" min="0" max="100" precision="1" gui-text="Power (%):">30</param>
+      <param name="cut_corner" type="float" min="0" max="100" precision="1" gui-text="Corner power (%):" gui-description="Power used at the slowest speed, in corners. Usually at or below Power.">30</param>
+      <spacer/>
+      <param name="max_power" type="float" min="1" max="100" precision="0" gui-text="Refuse power above (%):">100</param>
+    </page>
+    <page name="help" gui-text="Help">
+      <label>Fill colour = engrave. Stroke (outline) colour = cut. A shape with both is engraved, then cut.</label>
+      <label>Text is skipped: select it and use Path → Object to Path first. Hidden layers are skipped.</label>
+      <label>Order: engraving first, then cuts. Shapes inside other shapes (holes) are cut before the outline around them.</label>
+      <label>The head's position when you press Start is the top-left corner of the design. Engraving runs past the left and right edges (about 36 mm at 500 mm/s), so leave room.</label>
+      <label>The machine needs short file names: up to 8 letters/digits, e.g. SIGN1.MOL. Put the file in the root of the USB stick.</label>
+    </page>
+  </param>
+  <output>
+    <extension>.MOL</extension>
+    <mimetype>application/x-leetro-mol</mimetype>
+    <filetypename>Leetro LaserCut (*.MOL)</filetypename>
+    <filetypetooltip>Job file for Leetro laser controllers (USB stick)</filetypetooltip>
+    <dataloss>true</dataloss>
+  </output>
+  <script>
+    <command location="inx" interpreter="python">leetro_mol_output.py</command>
+  </script>
+</inkscape-extension>

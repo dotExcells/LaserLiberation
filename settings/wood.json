@@ -1,0 +1,6 @@
+{
+  "engrave": {
+    "black": {"speed": 500, "power": 30}
+  },
+  "cut": {}
+}

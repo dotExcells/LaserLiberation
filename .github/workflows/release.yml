@@ -1,0 +1,90 @@
+# Pushing a version tag (v1.0, v1.1, ...) tests the code, builds the macOS app and the Linux
+# AppImage, and attaches them to a GitHub release for that tag.
+name: Release
+
+on:
+  push:
+    tags: ['v*']
+
+permissions:
+  contents: write
+
+jobs:
+  test:
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Python and Tk
+        run: sudo apt-get update && sudo apt-get install -y python3-venv python3-tk xvfb
+      - name: Set up .venv
+        run: python3 -m venv .venv && .venv/bin/pip install -q -r requirements.txt
+      - name: Tests
+        run: |
+          for t in tools/test_origin.py tools/test_drawing_out.py tools/test_bidir_shift.py \
+                   tools/test_file_dialogs.py tools/test_linux_usb_access.py \
+                   OpenMOL/tools/test_origin.py OpenMOL/tools/test_bidir_shift.py; do
+            echo "== $t"
+            xvfb-run -a .venv/bin/python "$t"
+          done
+
+  linux:
+    needs: test
+    # built on an older Ubuntu so the AppImage also runs on newer distributions
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Python and Tk
+        run: sudo apt-get update && sudo apt-get install -y python3-venv python3-tk curl xvfb
+      - name: Build the AppImage
+        env:
+          LASER_BUILD: ${{ github.ref_name }}
+        run: xvfb-run -a app/build-linux.sh --no-install
+      - uses: actions/upload-artifact@v4
+        with:
+          name: linux
+          path: app/dist/Laser_Prepare-x86_64.AppImage
+
+  macos:
+    needs: test
+    runs-on: macos-14
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Python 3.14 with Tk 9
+        run: brew install python@3.14 python-tk@3.14
+      - name: Set up .venv
+        run: |
+          "$(brew --prefix)/bin/python3.14" -m venv .venv
+          .venv/bin/pip install -q -r requirements.txt
+          .venv/bin/python tools/laser_window.py --check-tk
+      - name: Build Laser Prepare.app
+        env:
+          LASER_BUILD: ${{ github.ref_name }}
+        run: |
+          cd app
+          ../.venv/bin/pyinstaller --noconfirm --clean --log-level WARN "Laser Prepare.spec"
+          ditto -c -k --keepParent "dist/Laser Prepare.app" dist/Laser-Prepare-macOS.zip
+      - uses: actions/upload-artifact@v4
+        with:
+          name: macos
+          path: app/dist/Laser-Prepare-macOS.zip
+
+  release:
+    needs: [linux, macos]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          path: dist
+          merge-multiple: true
+      - name: Create the release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          cat > notes.md <<'EOF'
+          - **macOS** (Apple Silicon): unzip `Laser-Prepare-macOS.zip` and move Laser Prepare to Applications. The app isn't signed by Apple: the first time, right-click it → Open → Open.
+          - **Linux** (x86_64): `chmod +x Laser_Prepare-x86_64.AppImage`, then double-click it.
+
+          Test new jobs at low power on scrap.
+          EOF
+          gh release create "${{ github.ref_name }}" dist/* --repo "${{ github.repository }}" \
+            --title "LaserLiberation ${{ github.ref_name }}" --notes-file notes.md

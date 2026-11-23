@@ -1,0 +1,2 @@
+Sun Valley ttk theme (sv-ttk) 2.6.1 from PyPI, unmodified: https://github.com/rdbende/Sun-Valley-ttk-theme
+MIT licence (LICENSE). Used by tools/laser_window.py (dark_theme). To update, replace these files with a newer wheel's sv_ttk/.

@@ -1,0 +1,5 @@
+# Leetro laser controller (USB 0548:1005): let the logged-in user talk to it without root,
+# for Laser Prepare's "Send to laser" and OpenMOL's leetro_usb.py. Installed by linux/install-udev.sh,
+# or by Laser Prepare itself (Send to laser offers it on Linux).
+# Must sort before systemd's 73-seat-late.rules, which gives uaccess devices to the user (99- is too late).
+SUBSYSTEM=="usb", ATTR{idVendor}=="0548", ATTR{idProduct}=="1005", MODE="0660", TAG+="uaccess"

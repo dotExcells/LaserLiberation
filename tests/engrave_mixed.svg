@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="80mm" height="50mm" viewBox="0 0 80 50">
+  <!-- ring with a hole (evenodd), overlapping circles (union), star engraved + cut, text -->
+  <path d="M 15,5 A 10,10 0 1 1 15,25 A 10,10 0 1 1 15,5 Z M 15,10 A 5,5 0 1 0 15,20 A 5,5 0 1 0 15,10 Z"
+        fill="#000" fill-rule="evenodd"/>
+  <circle cx="38" cy="15" r="7" fill="#000"/>
+  <circle cx="46" cy="15" r="7" fill="#000"/>
+  <path d="M 65,3 L 69,13 L 79,13 L 71,19 L 74,29 L 65,23 L 56,29 L 59,19 L 51,13 L 61,13 Z"
+        fill="#555555" stroke="#ff0000" stroke-width="0.1"/>
+  <rect x="2" y="32" width="76" height="16" rx="4" fill="none" stroke="#0000ff" stroke-width="0.1"/>
+  <text x="10" y="44" font-size="8">Hello</text>
+</svg>

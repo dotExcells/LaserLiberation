@@ -1,6 +1,6 @@
 # LaserLiberation: SVG / DXF → Leetro laser
 
-Open-source replacement for Leetro's LaserCut software, which no longer runs on current computers.
+Open-source replacement for Leetro's LaserCut software.
 Draw in Inkscape (or any CAD program that saves DXF), set speed and power per colour in
 **Laser Prepare**, then send the job to the laser over its USB cable or save it as a `.MOL` file
 for a USB stick. Runs on macOS and Linux.
